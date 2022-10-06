@@ -57,7 +57,7 @@ jobs:
       - name: Number of Vulnerabilities in dependencies 
         run: | 
           cd coit-frontend
-          npm audit | tail -2
+          npm audit | tail -n 2
 
       # - name: Docker Login
       #   env:
