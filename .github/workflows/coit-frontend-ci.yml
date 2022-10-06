@@ -54,47 +54,52 @@ jobs:
           cd coit-frontend
           npm audit || true
 
-      - name: Docker Login
-        env:
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        run: |
-          docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-
-      - name: Build the container Image
+      - name: Number of Vulnerabilities in dependencies 
         run: | 
-          docker build coit-frontend -t chittiinfo/gba-coit-frontend:latest -f coit-frontend/Dockerfile-multistage
+          cd coit-frontend
+          npm audit | tail -3	
 
-      - name: Push the container Image
-        run: | 
-          docker push chittiinfo/gba-coit-frontend:latest
+      # - name: Docker Login
+      #   env:
+      #     DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      #     DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      #   run: |
+      #     docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
 
-      - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
-        with:
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-          project_id: ${{ secrets.GKE_PROJECT }}
+      # - name: Build the container Image
+      #   run: | 
+      #     docker build coit-frontend -t chittiinfo/gba-coit-frontend:latest -f coit-frontend/Dockerfile-multistage
 
-      - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
-        with:
-          cluster_name: ${{ env.GKE_CLUSTER }}
-          location: ${{ env.GKE_ZONE }}
-          credentials: ${{ secrets.GKE_SA_KEY }}
+      # - name: Push the container Image
+      #   run: | 
+      #     docker push chittiinfo/gba-coit-frontend:latest
 
-      - name: Deploy the GKE Cluster 
-        run: |           
-          cd kustomize/environments/preview
-          kubectl apply -k .
+      # - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+      #   with:
+      #     service_account_key: ${{ secrets.GKE_SA_KEY }}
+      #     project_id: ${{ secrets.GKE_PROJECT }}
 
-      - name: Check the sonarqube report here
-        run: | 
-          SONAR_URL=`kubectl get svc sonarqube-sonarqube --output jsonpath='{.status.loadBalancer.ingress[0].ip}' -n sonarqube`
-          echo "The SonarQube Reports are available at $SONAR_URL"
+      # - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+      #   with:
+      #     cluster_name: ${{ env.GKE_CLUSTER }}
+      #     location: ${{ env.GKE_ZONE }}
+      #     credentials: ${{ secrets.GKE_SA_KEY }}
 
-      - name: Wait for 60 seconds and get the preview of the applicaton
-        run: | 
-          sleep 60
-          PRIVEW_URL=`kubectl get svc coit-frontend-lb --output jsonpath='{.status.loadBalancer.ingress[0].ip}' -n preview`
-          echo "This is app preview URL $PRIVEW_URL"
+      # - name: Deploy the GKE Cluster 
+      #   run: |           
+      #     cd kustomize/environments/preview
+      #     kubectl apply -k .
+
+      # - name: Check the sonarqube report here
+      #   run: | 
+      #     SONAR_URL=`kubectl get svc sonarqube-sonarqube --output jsonpath='{.status.loadBalancer.ingress[0].ip}' -n sonarqube`
+      #     echo "The SonarQube Reports are available at $SONAR_URL"
+
+      # - name: Wait for 60 seconds and get the preview of the applicaton
+      #   run: | 
+      #     sleep 60
+      #     PRIVEW_URL=`kubectl get svc coit-frontend-lb --output jsonpath='{.status.loadBalancer.ingress[0].ip}' -n preview`
+      #     echo "This is app preview URL $PRIVEW_URL"
       
       # - name: Delete preview namespace
       #   run: | 
