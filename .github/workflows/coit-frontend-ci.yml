@@ -56,7 +56,9 @@ jobs:
 
       - name: Number of Vulnerabilities in dependencies 
         run: | 
-          bash ${GITHUB_WORKSPACE}/coit-frontend/npm.sh
+          cd coit-frontend
+          chmod 755 npm.sh
+          sh npm.sh
 
       # - name: Docker Login
       #   env:
