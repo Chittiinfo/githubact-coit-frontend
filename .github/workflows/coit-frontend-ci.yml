@@ -58,7 +58,7 @@ jobs:
         run: | 
           cd coit-frontend
           npm audit | tail >log.txt
-          tail -2 log.txt
+          cat log.txt | grep -i "vulnerabilities"
 
       # - name: Docker Login
       #   env:
