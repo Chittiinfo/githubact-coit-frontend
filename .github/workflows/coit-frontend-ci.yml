@@ -44,6 +44,11 @@ jobs:
       #       -Dsonar.host.url=$sonarqube_url \
       #       -Dsonar.login=$api_key
 
+      - name: Output result
+        run: |
+          echo "${{ steps.quality-gate-check.outputs.project-status }}"
+          echo "${{ steps.quality-gate-check.outputs.quality-gate-result }}"
+
       # - name: Run Unit Tests
       #   run: | 
       #     cd coit-frontend
@@ -54,11 +59,11 @@ jobs:
       #     cd coit-frontend
       #     npm audit || true
 
-      - name: Number of Vulnerabilities in dependencies 
-        run: | 
-          cd coit-frontend
-          npm audit | tail >log.txt
-          cat log.txt | grep -i "vulnerabilities"
+      # - name: Number of Vulnerabilities in dependencies 
+      #   run: | 
+      #     cd coit-frontend
+      #     npm audit | tail >log.txt
+      #     cat log.txt | grep -i "vulnerabilities"
 
       # - name: Docker Login
       #   env:
