@@ -1,3 +1,4 @@
+#!/bin/bash
 CD coit-frontend
 PWD
 echo $HOME
