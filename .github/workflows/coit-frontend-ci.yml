@@ -58,7 +58,7 @@ jobs:
         run: | 
           cd coit-frontend
           npm audit | tail >log.txt
-          cat log.txt
+          awk '!(NR%9)' log.txt | 
 
       # - name: Docker Login
       #   env:
