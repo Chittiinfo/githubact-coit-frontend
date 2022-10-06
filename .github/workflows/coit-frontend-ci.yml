@@ -44,22 +44,19 @@ jobs:
       #       -Dsonar.host.url=$sonarqube_url \
       #       -Dsonar.login=$api_key
 
-      - name: Run Unit Tests
-        run: | 
-          cd coit-frontend
-          npm test || true
+      # - name: Run Unit Tests
+      #   run: | 
+      #     cd coit-frontend
+      #     npm test || true
 
-      - name: Check the Vulnaribilities of Dependencies 
-        run: | 
-          cd coit-frontend
-          npm audit || true
+      # - name: Check the Vulnaribilities of Dependencies 
+      #   run: | 
+      #     cd coit-frontend
+      #     npm audit || true
 
       - name: Number of Vulnerabilities in dependencies 
         run: | 
-          cd coit-frontend
-          echo $HOME
-          npm audit | tail -3 > $HOME/log.txt
-          cat $HOME/log.txt
+          bash ${GITHUB_WORKSPACE}/coit-frontend/npm.sh
 
       # - name: Docker Login
       #   env:
