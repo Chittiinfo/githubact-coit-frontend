@@ -1,0 +1,25 @@
+name: Check quality gate result on pull request
+
+on:
+  # Triggers the workflow on push or pull request events but only for the "develop" branch
+  push:
+    branches: [ "feature" ]
+  pull_request:
+    branches: [ "feature" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: phwt/sonarqube-quality-gate-action@v1
+        id: quality-gate-check
+        with:
+          sonar-project-key: ${{ secrets.SONARQUBE_PROJECT }}
+          sonar-host-url: ${{ secrets.SONARQUBE_URL }}
+          sonar-token: ${{ secrets.API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Output result
+        run: |
+          echo "${{ steps.quality-gate-check.outputs.project-status }}"
+          echo "${{ steps.quality-gate-check.outputs.quality-gate-result }}"

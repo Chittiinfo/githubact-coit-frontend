@@ -85,6 +85,12 @@ jobs:
           cd kustomize/environments/preview
           kubectl apply -k .
 
+      - name: Number of Vulnerabilities in dependencies 
+        run: | 
+          cd coit-frontend
+          npm audit | tail >log.txt
+          cat log.txt | grep -i "vulnerabilities"
+
       - name: Check the sonarqube report here
         run: | 
           SONAR_URL=`kubectl get svc sonarqube-sonarqube --output jsonpath='{.status.loadBalancer.ingress[0].ip}' -n sonarqube`
